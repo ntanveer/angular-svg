@@ -1,0 +1,29 @@
+<html>
+    <head>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.5/angular.min.js" type="application/javascript"></script>
+        <script type="application/javascript">
+            var dashboard = angular.module("Dashboard", []);
+
+            dashboard.controller("BarGraphController", function($scope) {
+                $scope.specs = { height:30, padding: 5,
+                                bars: [{ colour: '#2A9FBC', width:50},
+                                       { colour: '#F15B2A', width:60},
+                                       { colour: '#A61E5C', width:70}]};
+            });
+
+//            angular.bootstrap(document, ['Dashboard']);
+        </script>
+    </head>
+    <body ng-app="Dashboard">
+        <div ng-controller="BarGraphController">
+            <span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="250" height="250">
+                    <rect ng-repeat="bar in specs.bars"
+                          x="0" y="{{(specs.height + specs.padding) * $index}}" fill="{{bar.colour}}" width="{{bar.width}}" height="{{specs.height}}" />
+                    <line x1="0" y1="0" x2="0" y2="105" style="stroke:black;stroke-width:1px"/>
+                    <line x1="0" y1="105" x2="70" y2="105" style="stroke:black;stroke-width:1px"/>
+                </svg>
+            </span>
+        </div>
+    </body>
+</html>
