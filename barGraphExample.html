@@ -5,10 +5,41 @@
             var dashboard = angular.module("Dashboard", []);
 
             dashboard.controller("BarGraphController", function($scope) {
-                $scope.specs = { height:30, padding: 5,
-                                bars: [{ colour: '#2A9FBC', width:50},
-                                       { colour: '#F15B2A', width:60},
-                                       { colour: '#A61E5C', width:70}]};
+                $scope.specs = { height:30, padding: 5, fontStyle: '10pt arial', fontHeight: 10, gradientInterval: 50, gradients: [],
+                                bars: [
+                                    { colour: '#2A9FBC', width:50, text: 'September'},
+                                    { colour: '#F15B2A', width:60, text: 'October'},
+                                    { colour: '#A61E5C', width:70, text: 'November'}
+                                ]};
+
+                $scope.$watch('specs', function() {
+                    var ctx = document.createElement('canvas').getContext('2d');
+                    var gradients = [];
+
+                    ctx.font = $scope.specs.fontStyle;
+                    $scope.specs.labelWidth = 0;
+                    $scope.specs.overallWidth = 0;
+
+                    angular.forEach($scope.specs.bars, function(bar, index) {
+
+                        $scope.specs.labelWidth = Math.max($scope.specs.labelWidth,
+                                                          ctx.measureText(bar.text).width);
+
+                        $scope.specs.overallWidth = Math.max($scope.specs.overallWidth,
+                                                            bar.width);
+                    });
+
+                    for(var i=0;;i +=$scope.specs.gradientInterval) {
+                        gradients.push({text: i, offset:i});
+                        if (i > $scope.specs.overallWidth)
+                            break;
+                    }
+
+                    $scope.specs.gradients = gradients;
+
+                    $scope.specs.overallHeight = $scope.specs.bars.length *
+                                                    (1 * $scope.specs.height + $scope.specs.padding)
+                }, true);
             });
 
 //            angular.bootstrap(document, ['Dashboard']);
@@ -16,12 +47,25 @@
     </head>
     <body ng-app="Dashboard">
         <div ng-controller="BarGraphController">
+            <input type="text" ng-model="specs.height">
+            <p></p>
             <span>
                 <svg xmlns="http://www.w3.org/2000/svg" width="250" height="250">
-                    <rect ng-repeat="bar in specs.bars"
-                          x="0" y="{{(specs.height + specs.padding) * $index}}" fill="{{bar.colour}}" width="{{bar.width}}" height="{{specs.height}}" />
-                    <line x1="0" y1="0" x2="0" y2="105" style="stroke:black;stroke-width:1px"/>
-                    <line x1="0" y1="105" x2="70" y2="105" style="stroke:black;stroke-width:1px"/>
+                    <g ng-repeat="bar in specs.bars">
+                        <text x="0"
+                              y="{{((1 * specs.height + specs.padding) * $index) + (specs.height/2) + (specs.fontHeight/2)}}"
+                              text-anchor="start"
+                              style="font-family: arial; font-size: 10pt">
+                            {{bar.text}}
+                        </text>
+                        <rect x="{{specs.labelWidth}}" y="{{(1 * specs.height + specs.padding) * $index}}" fill="{{bar.colour}}" width="{{bar.width}}" height="{{specs.height}}" />
+                    </g>
+                    <line x1="{{specs.labelWidth}}" y1="0" x2="{{specs.labelWidth}}" y2="{{specs.overallHeight}}" style="stroke:black;stroke-width:1px"/>
+                    <line x1="{{specs.labelWidth}}" y1="{{specs.overallHeight}}" x2="{{specs.overallWidth + specs.labelWidth}}" y2="{{specs.overallHeight}}" style="stroke:black;stroke-width:1px"/>
+                    <text ng-repeat="gradient in specs.gradients"
+                          x="{{specs.labelWidth + gradient.offset}}"
+                          y="{{((1 * specs.height + specs.padding) * specs.bars.length) + specs.fontHeight + 3}}"
+                          text-anchor="middle" style="font-family:arial;font-size:10pt">{{gradient.text}}</text>
                 </svg>
             </span>
         </div>
