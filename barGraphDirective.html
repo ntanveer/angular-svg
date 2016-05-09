@@ -1,0 +1,56 @@
+<html>
+    <head>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.5/angular.min.js" type="application/javascript"></script>
+        <script type="application/javascript">
+            var dashboard = angular.module("Dashboard", []);
+
+            dashboard.controller("BarGraphController", function($scope) {
+                $scope.specs = { height:30, padding: 5, fontStyle: '10pt arial', fontHeight: 10, gradientInterval: 50, gradients: [],
+                bars: [
+                    { colour: '#2A9FBC', width:50, text: 'September'},
+                    { colour: '#F15B2A', width:60, text: 'October'},
+                    { colour: '#A61E5C', width:70, text: 'November'}
+                ]};
+            });
+
+            dashboard.directive("barGraph", function() {
+                return {
+                    scope: {
+                        specs:'='
+                    },
+                    templateUrl:'Templates/barGraphTemplate.html',
+                    link: function(scope, element, attrs) {
+                        var ctx = document.createElement('canvas').getContext('2d');
+                        var gradients = [];
+
+                        ctx.font = scope.specs.fontStyle;
+                        scope.specs.labelWidth = 0;
+                        scope.specs.overallWidth = 0;
+
+                        angular.forEach(scope.specs.bars, function(bar, index) {
+                            scope.specs.labelWidth = Math.max(scope.specs.labelWidth,
+                                                              ctx.measureText(bar.text).width);
+                            scope.specs.overallWidth = Math.max(scope.specs.overallWidth,
+                                                                bar.width);
+                        });
+
+                        for(var i=0;;i +=scope.specs.gradientInterval) {
+                            gradients.push({text: i, offset:i});
+                            if (i > scope.specs.overallWidth)
+                                break;
+                        }
+
+                        scope.specs.gradients = gradients;
+                        scope.specs.overallHeight = scope.specs.bars.length * (1 * scope.specs.height + scope.specs.padding);
+                    }
+                }
+            });
+
+        </script>
+    </head>
+    <body ng-app="Dashboard">
+        <div ng-controller="BarGraphController">
+            <bar-graph specs="specs"></bar-graph>
+        </div>
+    </body>
+</html>
