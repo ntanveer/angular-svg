@@ -1,0 +1,69 @@
+<html>
+    <head>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.5/angular.min.js" type="application/javascript"></script>
+        <script type="application/javascript">
+            var dashboard = angular.module('Dashboard',[]);
+
+            dashboard.controller('pieChartControlller', function($scope){
+                $scope.specs={ slices:[{ value: 50, colour: '#A62E5C', label: { text: 'North'} },
+                                      { value: 100, colour: '#9BC850', label: { text: 'South'} },
+                                      { value: 75, colour: '#F15B2A', label: { text: 'East'} },
+                                      { value: 50, colour: '#675BA7', label: { text: 'West'} }] };
+
+                var x1=200, y1=0, total=0, prevEndingAngle=0;
+
+                angular.forEach($scope.specs.slices, function(slice, i){
+                   total += parseInt(slice.value);
+                });
+
+                angular.forEach($scope.specs.slices, function(slice, i){
+                    slice.x1 = x1;
+                    slice.y1 = y1;
+
+                    slice.endingAngle = (slice.value/total * 360) + prevEndingAngle;
+                    var radians = slice.endingAngle * (Math.PI/180);
+                    slice.x2 = (Math.cos(radians) * 200);
+                    slice.y2 = (Math.sin(radians) *200);
+
+                    x1 = slice.x2;
+                    y1 = slice.y2;
+                    prevEndingAngle = slice.endingAngle;
+                });
+
+                angular.forEach($scope.specs.slices, function(slice, i){
+                    var angle = i == 0 ? slice.endingAngle / 2 : slice.endingAngle - (slice.endingAngle - prevEndingAngle) / 2;
+                    var radians = angle * (Math.PI/180);
+                    var tickMarkX = Math.cos(radians) * 200;
+                    var tickMarkY = Math.sin(radians) * 200;
+
+                    slice.label.x = Math.cos(radians) * (200 +20);
+                    slice.label.y = Math.sin(radians) * (200 +20);
+                    slice.label.alignment = getAlignment(angle);
+                    slice.tickMark = { x: parseInt(tickMarkX), y: parseInt(tickMarkY), rotation: parseInt(angle) };
+                    prevEndingAngle = slice.endingAngle;
+                });
+
+                function getAlignment(s) {
+                    if (s < 45) return "start";
+                        else if (s < 135) return "middle";
+                            else if (s < 225) return "end";
+                                else return "start";
+                }
+            });
+        </script>
+    </head>
+    <body ng-app="Dashboard">
+        <div ng-controller="pieChartControlller">
+            <svg xmlns="http://www.w3.org/2000/svg" width="600" height="600">
+                <path ng-repeat="slice in specs.slices" stroke="{{slice.colour}}" fill="{{slice.colour}}" stroke-width="0"
+                      d="M 300,300 l {{slice.x1}},{{slice.y1 * -1}} a200,200 0 0 0 {{slice.x2-slice.x1}},{{(slice.y2-slice.y1) * -1}}" />
+                <line ng-repeat="slice in specs.slices" stroke="black" stroke-width="2"
+                    x1="{{300 + slice.tickMark.x -10}}" y1="{{300 + (slice.tickMark.y * -1)}}"
+                    x2="{{300 + slice.tickMark.x +10}}" y2="{{300 + (slice.tickMark.y * -1)}}"
+                    transform="rotate({{slice.tickMark.rotation * -1}}, {{300 + slice.tickMark.x}},{{300 + (slice.tickMark.y * -1)}})"/>
+                <text ng-repeat="slice in specs.slices" x="{{300 + slice.label.x}}" y="{{300 + slice.label.y * -1}}"
+                      style="font-family: arial; font-size:16pt" text-anchor="{{slice.label.alignment}}">{{slice.label.text}}</text>
+            </svg>
+        </div>
+    </body>
+</html>
