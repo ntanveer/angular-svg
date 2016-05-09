@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600">
+    <path ng-repeat="slice in specs.slices" stroke="{{slice.colour}}" fill="{{slice.colour}}" stroke-width="0"
+          ng-attr-d="M {{specs.centerX}},{{specs.centerX}} l {{slice.x1}},{{slice.y1 * -1}} a{{specs.radius}},{{specs.radius}} 0 0 0 {{slice.x2-slice.x1}},{{(slice.y2-slice.y1) * -1}}" />
+    <line ng-repeat="slice in specs.slices" stroke="black" stroke-width="2"
+        ng-attr-x1="{{specs.centerX + slice.tickMark.x -10}}" ng-attr-y1="{{specs.centerY + (slice.tickMark.y * -1)}}"
+        ng-attr-x2="{{specs.centerX + slice.tickMark.x +10}}" ng-attr-y2="{{specs.centerY + (slice.tickMark.y * -1)}}"
+        ng-attr-transform="rotate({{slice.tickMark.rotation * -1}}, {{specs.centerX + slice.tickMark.x}},{{specs.centerY + (slice.tickMark.y * -1)}})"/>
+    <text ng-repeat="slice in specs.slices" ng-attr-x="{{specs.centerX + slice.label.x}}" ng-attr-y="{{specs.centerY + slice.label.y * -1}}"
+          style="font-family: arial; font-size:16pt" text-anchor="{{slice.label.alignment}}">{{slice.label.text}}</text>
+</svg>
