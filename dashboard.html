@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.5/angular.min.js" type="application/javascript"></script>
+        <script src="Directives/pieChartDirective.js"></script>
+        <script src="Directives/barGraphDirective.js"></script>
+        <script src="Directives/gaugeDirective.js"></script>
+        <script type="application/javascript">
+            var dashboard = angular.module('Dashboard',['pieChartWidget', 'barGraphWidget', 'gaugeWidget']);
+
+            dashboard.controller("dashboardController", function($scope) {
+               $scope.pieChartSpecs1 = { centerX:150, centerY:150, radius:100,
+                                slices:[{ value: 50, colour: '#A62E5C', label: { text: 'North'} },
+                                      { value: 100, colour: '#9BC850', label: { text: 'South'} },
+                                      { value: 75, colour: '#F15B2A', label: { text: 'East'} },
+                                      { value: 50, colour: '#675BA7', label: { text: 'West'} }] };
+
+                $scope.barGraphSpecs1 = { height:30, padding: 5, fontStyle: '10pt arial', fontHeight: 10, gradientInterval: 50, gradients: [],
+                bars: [
+                    { colour: '#2A9FBC', width:50, text: 'September'},
+                    { colour: '#F15B2A', width:60, text: 'October'},
+                    { colour: '#A61E5C', width:70, text: 'November'}
+                ]};
+
+                $scope.gaugeSpecs1 = { currentValue:45, centerX: 300, centerY:300, radius:200, maxValue:180, gradientInterval: 10, gradients:[]};
+                $scope.gaugeSpecs2 = { currentValue:85, centerX: 300, centerY:300, radius:200, maxValue:180, gradientInterval: 10, gradients:[]};
+            });
+        </script>
+    </head>
+    <body ng-app="Dashboard">
+        <div ng-controller="dashboardController">
+            <pie-chart specs="pieChartSpecs1"></pie-chart>
+            <bar-graph specs="barGraphSpecs1"></bar-graph>
+            <gauge specs="gaugeSpecs1"></gauge>
+            <gauge specs="gaugeSpecs2"></gauge>
+        </div>
+    </body>
+</html>
