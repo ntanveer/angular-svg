@@ -19,6 +19,11 @@ barGraphWidget.directive("barGraph", function() {
                                                   ctx.measureText(bar.text).width);
                 scope.specs.overallWidth = Math.max(scope.specs.overallWidth,
                                                     bar.width);
+
+                var id = scope.specs.id + '_' + index;
+                bar.barStyle = 'animation:' + id + ' .5s linear;animation-fill-mode:forwards';
+                var animationDefinition = '@keyframes ' + id + ' { from { width:0px; } to { width:' + bar.width + 'px; } }';
+                document.styleSheets[0].insertRule(animationDefinition, 0);
             });
 
             for(var i=0;;i +=scope.specs.gradientInterval) {

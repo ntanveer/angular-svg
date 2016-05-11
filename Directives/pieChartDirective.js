@@ -32,6 +32,11 @@ pieChartWidget.directive('pieChart', function() {
                 var radians = angle * (Math.PI/180);
                 var tickMarkX = Math.cos(radians) * scope.specs.radius;
                 var tickMarkY = Math.sin(radians) * scope.specs.radius;
+                var id = scope.specs.id + '_' + i;
+
+                slice.opacitySettings = 'animation:' + id + ' 1s linear; animation-delay:' + i +'s;animation-fill-mode:forwards';
+                var animationDefinition = '@keyframes ' + id + ' { from { opacity: 0.0 } to {opacity: 1.0};}';
+                document.styleSheets[0].insertRule(animationDefinition, 0);
 
                 slice.label.x = Math.cos(radians) * (scope.specs.radius +20);
                 slice.label.y = Math.sin(radians) * (scope.specs.radius +20);

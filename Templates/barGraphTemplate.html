@@ -1,17 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="250" height="250">
     <g ng-repeat="bar in specs.bars">
-        <text x="0"
-              y="{{((1 * specs.height + specs.padding) * $index) + (specs.height/2) + (specs.fontHeight/2)}}"
+        <text ng-attr-x="0"
+              ng-attr-y="{{((1 * specs.height + specs.padding) * $index) + (specs.height/2) + (specs.fontHeight/2)}}"
               text-anchor="start"
               style="font-family: arial; font-size: 10pt">
             {{bar.text}}
         </text>
-        <rect x="{{specs.labelWidth}}" y="{{(1 * specs.height + specs.padding) * $index}}" fill="{{bar.colour}}" width="{{bar.width}}" height="{{specs.height}}" />
+        <rect style="{{bar.barStyle}}" ng-attr-x="{{specs.labelWidth}}" ng-attr-y="{{(1 * specs.height + specs.padding) * $index}}" fill="{{bar.colour}}" ng-attr-width="{{bar.width}}" ng-attr-height="{{specs.height}}" />
     </g>
-    <line x1="{{specs.labelWidth}}" y1="0" x2="{{specs.labelWidth}}" y2="{{specs.overallHeight}}" style="stroke:black;stroke-width:1px"/>
-    <line x1="{{specs.labelWidth}}" y1="{{specs.overallHeight}}" x2="{{specs.overallWidth + specs.labelWidth}}" y2="{{specs.overallHeight}}" style="stroke:black;stroke-width:1px"/>
+    <line ng-attr-x1="{{specs.labelWidth}}" ng-attr-y1="0" ng-attr-x2="{{specs.labelWidth}}" ng-attr-y2="{{specs.overallHeight}}" style="stroke:black;stroke-width:1px"/>
+    <line ng-attr-x1="{{specs.labelWidth}}" ng-attr-y1="{{specs.overallHeight}}" ng-attr-x2="{{specs.overallWidth + specs.labelWidth}}" ng-attr-y2="{{specs.overallHeight}}" style="stroke:black;stroke-width:1px"/>
     <text ng-repeat="gradient in specs.gradients"
-          x="{{specs.labelWidth + gradient.offset}}"
-          y="{{((1 * specs.height + specs.padding) * specs.bars.length) + specs.fontHeight + 3}}"
+          ng-attr-x="{{specs.labelWidth + gradient.offset}}"
+          ng-attr-y="{{((1 * specs.height + specs.padding) * specs.bars.length) + specs.fontHeight + 3}}"
           text-anchor="middle" style="font-family:arial;font-size:10pt">{{gradient.text}}</text>
 </svg>

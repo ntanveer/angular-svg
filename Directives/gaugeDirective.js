@@ -7,7 +7,7 @@ gaugeWidget.directive("gauge", function() {
         template: function(e, attrs) {
             return '<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600">' +
                         '<path id="background" d="{{background}}" stroke-width="10" stroke="black" fill="none"/>' +
-                        '<path d="{{value}}" stroke-width="10" stroke="#9BC850" fill="none"/>' +
+                        '<path d="{{value}}" style="{{dashArray}}" stroke-width="10" stroke="#9BC850" fill="none"/>' +
                         '<path id="gradients" d="{{gradients}}" stroke-width="0" fill="none"/>' +
                         '<text ng-repeat="gradient in specs.gradients" dx="0" dy="0" text-anchor="middle" style="font: bold large arial">' +
                             '<textPath xlink:href="#gradients" startOffset="{{gradient.offset}}%">{{gradient.value}}</textPath>' +
@@ -46,6 +46,13 @@ gaugeWidget.directive("gauge", function() {
                 scope.gradients = getArcPathForAngle(0,180, 210);
 
                 scope.maxValueCoordinates =  getCoordinatesForAngle(300,300, 210,180);
+                var id = scope.specs.id;
+
+                scope.dashArray = 'animation:' + id + ' .5s linear; animation-fill-mode: forwards;';
+
+                var arcLength = Math.ceil(scope.specs.currentValue * (Math.PI/180) * scope.specs.radius);
+                var animationDefinition = '@keyframes '+ id +' { from {stroke-dasharray: 0 ' + arcLength + '} to {stroke-dasharray: ' + arcLength + ' 0}}';
+                document.styleSheets[0].insertRule(animationDefinition, 0);
             }
 
             displayGauge();
