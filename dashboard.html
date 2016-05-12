@@ -1,6 +1,7 @@
 <html>
     <head>
         <style></style>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.5/angular.min.js" type="application/javascript"></script>
         <script src="Directives/pieChartDirective.js"></script>
         <script src="Directives/barGraphDirective.js"></script>
@@ -34,11 +35,51 @@
         </script>
     </head>
     <body ng-app="Dashboard">
-        <div ng-controller="dashboardController">
-            <pie-chart specs="pieChartSpecs1"></pie-chart>
-            <bar-graph specs="barGraphSpecs1"></bar-graph>
-            <bar-graph specs="barGraphSpecs2"></bar-graph>
-            <gauge specs="gaugeSpecs1"></gauge>
+        <nav class="blue darken-2">
+        <div class="nav-wrapper">
+          <ul id="nav-mobile" class="left hide-on-med-and-down">
+              <li><a href="#">Home</a></li>
+            </ul>
+        </div>
+        </nav>
+        <div ng-controller="dashboardController" class="container">
+            <div class="row"></div>
+            <div class="row">
+                <div class="col xs6">
+                  <div class="card white">
+                    <div class="card-content back-text">
+                      <span class="card-title">Pie Chart</span>
+                        <pie-chart specs="pieChartSpecs1"></pie-chart>
+                    </div>
+                  </div>
+                </div>
+                <div class="col xs6">
+                  <div class="card white">
+                    <div class="card-content back-text">
+                      <span class="card-title">Bar Graph</span>
+                      <bar-graph specs="barGraphSpecs2"></bar-graph>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col xs8">
+                    <div class="card white">
+                    <div class="card-content back-text">
+                      <span class="card-title">Gauge</span>
+                    <gauge specs="gaugeSpecs1"></gauge>
+                        </div>
+                    </div>
+                </div>
+                <div class="col xs4">
+                    <div class="card white">
+                    <div class="card-content back-text">
+                      <span class="card-title">Bar Graph</span>
+                    <bar-graph specs="barGraphSpecs1"></bar-graph>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </body>
 </html>
